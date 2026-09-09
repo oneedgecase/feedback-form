@@ -1,0 +1,9 @@
+{
+  "name": "feedback-form",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "mkdir -p dist && cp index.html dist/index.html",
+    "start": "python3 -m http.server 4173"
+  }
+}
