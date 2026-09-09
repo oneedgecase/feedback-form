@@ -120,6 +120,40 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    .rating-grid .option:nth-child(1) {
+      --rating-color: #d84c4c;
+      --rating-soft: #fde1e1;
+      --rating-shadow: rgba(216, 76, 76, 0.22);
+    }
+
+    .rating-grid .option:nth-child(2) {
+      --rating-color: #ea7b34;
+      --rating-soft: #ffeadb;
+      --rating-shadow: rgba(234, 123, 52, 0.22);
+    }
+
+    .rating-grid .option:nth-child(3) {
+      --rating-color: #d1a12f;
+      --rating-soft: #fff4d8;
+      --rating-shadow: rgba(209, 161, 47, 0.2);
+    }
+
+    .rating-grid .option:nth-child(4) {
+      --rating-color: #7cb342;
+      --rating-soft: #ebf7dc;
+      --rating-shadow: rgba(124, 179, 66, 0.22);
+    }
+
+    .rating-grid .option:nth-child(5) {
+      --rating-color: #2e9e5b;
+      --rating-soft: #dcf6e6;
+      --rating-shadow: rgba(46, 158, 91, 0.22);
+    }
+
+    .rating-grid .option span {
+      color: var(--rating-color, var(--text));
+    }
+
     .option input {
       position: absolute;
       opacity: 0;
@@ -148,9 +182,10 @@
     }
 
     .option input:checked + span {
-      border-color: rgba(140, 59, 47, 0.42);
-      background: linear-gradient(180deg, #fffaf6 0%, #f4e2d9 100%);
-      box-shadow: 0 12px 24px rgba(140, 59, 47, 0.18);
+      color: var(--rating-color, var(--text));
+      border-color: color-mix(in srgb, var(--rating-color, var(--primary)) 58%, white);
+      background: linear-gradient(180deg, #fffaf6 0%, var(--rating-soft, #f4e2d9) 100%);
+      box-shadow: 0 12px 24px var(--rating-shadow, rgba(140, 59, 47, 0.18));
       transform: translateY(-2px);
     }
 
