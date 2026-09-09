@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Feedback</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: rgba(255, 255, 255, 0.86);
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: rgba(148, 163, 184, 0.25);
+      --primary: #4f46e5;
+      --primary-soft: #eef2ff;
+      --accent: #14b8a6;
+      --shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(79, 70, 229, 0.16), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(20, 184, 166, 0.18), transparent 28%),
+        linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .shell {
+      width: min(100%, 760px);
+    }
+
+    .card {
+      background: var(--card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(24px, 4vw, 40px);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 4vw, 3.1rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .intro {
+      margin: 0 0 32px;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.7;
+      max-width: 58ch;
+    }
+
+    form {
+      display: grid;
+      gap: 24px;
+    }
+
+    .field {
+      display: grid;
+      gap: 12px;
+    }
+
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: baseline;
+      flex-wrap: wrap;
+    }
+
+    label,
+    legend {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .rating-grid,
+    .choice-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .rating-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .choice-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .option span {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 68px;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.85);
+      font-weight: 700;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+      cursor: pointer;
+    }
+
+    .option span small {
+      display: block;
+      color: var(--muted);
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .option input:checked + span {
+      border-color: rgba(79, 70, 229, 0.45);
+      background: linear-gradient(180deg, #ffffff 0%, #eef2ff 100%);
+      box-shadow: 0 12px 24px rgba(79, 70, 229, 0.14);
+      transform: translateY(-2px);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 140px;
+      resize: vertical;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 16px 18px;
+      font: inherit;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    textarea:focus,
+    .option input:focus-visible + span,
+    button:focus-visible {
+      outline: 3px solid rgba(79, 70, 229, 0.2);
+      outline-offset: 2px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 18px;
+      padding: 16px 22px;
+      font: inherit;
+      font-weight: 800;
+      color: white;
+      background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%);
+      box-shadow: 0 18px 34px rgba(79, 70, 229, 0.26);
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 20px 40px rgba(79, 70, 229, 0.3);
+    }
+
+    .confirmation {
+      display: none;
+      text-align: center;
+      gap: 18px;
+    }
+
+    .confirmation.visible {
+      display: grid;
+    }
+
+    .confirmation-badge {
+      width: 88px;
+      height: 88px;
+      margin: 0 auto;
+      border-radius: 28px;
+      display: grid;
+      place-items: center;
+      font-size: 2rem;
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.14), rgba(20, 184, 166, 0.18));
+    }
+
+    .confirmation p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .summary {
+      margin-top: 10px;
+      display: inline-flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    @media (max-width: 640px) {
+      .rating-grid,
+      .choice-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .option span {
+        min-height: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="card" id="feedback-card">
+      <div id="form-view">
+        <div class="eyebrow">✨ We’d love your feedback</div>
+        <h1>Tell us about your experience.</h1>
+        <p class="intro">
+          Your thoughts help us keep improving. This quick form only takes a minute and helps us understand what’s working well and where we can do better.
+        </p>
+
+        <form id="feedback-form">
+          <fieldset class="field">
+            <div class="label-row">
+              <legend>Overall rating</legend>
+              <span class="hint">1 = needs work, 5 = excellent</span>
+            </div>
+            <div class="rating-grid">
+              <label class="option"><input type="radio" name="rating" value="1" required><span>1</span></label>
+              <label class="option"><input type="radio" name="rating" value="2"><span>2</span></label>
+              <label class="option"><input type="radio" name="rating" value="3"><span>3</span></label>
+              <label class="option"><input type="radio" name="rating" value="4"><span>4</span></label>
+              <label class="option"><input type="radio" name="rating" value="5"><span>5</span></label>
+            </div>
+          </fieldset>
+
+          <div class="field">
+            <div class="label-row">
+              <label for="liked">What did you like?</label>
+              <span class="hint">Share the highlights</span>
+            </div>
+            <textarea id="liked" name="liked" placeholder="I especially appreciated..." required></textarea>
+          </div>
+
+          <div class="field">
+            <div class="label-row">
+              <label for="improved">What could be improved?</label>
+              <span class="hint">Your honest input is welcome</span>
+            </div>
+            <textarea id="improved" name="improved" placeholder="One thing that could be even better is..." required></textarea>
+          </div>
+
+          <fieldset class="field">
+            <div class="label-row">
+              <legend>Would you recommend this product?</legend>
+              <span class="hint">Choose one</span>
+            </div>
+            <div class="choice-grid">
+              <label class="option"><input type="radio" name="recommend" value="Yes" required><span>Yes<small>I’d recommend it</small></span></label>
+              <label class="option"><input type="radio" name="recommend" value="No"><span>No<small>Not at this time</small></span></label>
+            </div>
+          </fieldset>
+
+          <button type="submit">Send feedback</button>
+        </form>
+      </div>
+
+      <section class="confirmation" id="confirmation-view" aria-live="polite">
+        <div class="confirmation-badge">💜</div>
+        <div>
+          <h1>Thank you for sharing.</h1>
+          <p>
+            We really appreciate your feedback. It helps us shape a better experience and make thoughtful improvements.
+          </p>
+        </div>
+        <div class="summary" id="summary"></div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById('feedback-form');
+    const formView = document.getElementById('form-view');
+    const confirmationView = document.getElementById('confirmation-view');
+    const summary = document.getElementById('summary');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(form);
+      const rating = formData.get('rating');
+      const recommend = formData.get('recommend');
+
+      summary.innerHTML = `
+        <span class="pill">Rating: ${rating}/5</span>
+        <span class="pill">Recommend: ${recommend}</span>
+      `;
+
+      formView.style.display = 'none';
+      confirmationView.classList.add('visible');
+    });
+  </script>
+</body>
+</html>
