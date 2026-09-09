@@ -6,15 +6,15 @@
   <title>Customer Feedback</title>
   <style>
     :root {
-      --bg: #f4f7fb;
-      --card: rgba(255, 255, 255, 0.86);
-      --text: #1f2937;
-      --muted: #6b7280;
-      --border: rgba(148, 163, 184, 0.25);
-      --primary: #4f46e5;
-      --primary-soft: #eef2ff;
-      --accent: #14b8a6;
-      --shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+      --bg: #f6efeb;
+      --card: rgba(255, 248, 244, 0.88);
+      --text: #3b241c;
+      --muted: #7b5a4a;
+      --border: rgba(123, 90, 74, 0.24);
+      --primary: #8c3b2f;
+      --primary-soft: #f4e2d9;
+      --accent: #6b3e2e;
+      --shadow: 0 24px 60px rgba(67, 39, 30, 0.14);
       --radius: 24px;
     }
 
@@ -28,9 +28,9 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top left, rgba(79, 70, 229, 0.16), transparent 30%),
-        radial-gradient(circle at bottom right, rgba(20, 184, 166, 0.18), transparent 28%),
-        linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
+        radial-gradient(circle at top left, rgba(140, 59, 47, 0.18), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(107, 62, 46, 0.16), transparent 28%),
+        linear-gradient(180deg, #fbf4ef 0%, #f1e4dc 100%);
       display: grid;
       place-items: center;
       padding: 24px;
@@ -38,6 +38,12 @@
 
     .shell {
       width: min(100%, 760px);
+    }
+
+    .page-footer {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
     }
 
     .card {
@@ -120,6 +126,40 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    .rating-grid .option:nth-child(1) {
+      --rating-color: #d84c4c;
+      --rating-soft: #fde1e1;
+      --rating-shadow: rgba(216, 76, 76, 0.22);
+    }
+
+    .rating-grid .option:nth-child(2) {
+      --rating-color: #ea7b34;
+      --rating-soft: #ffeadb;
+      --rating-shadow: rgba(234, 123, 52, 0.22);
+    }
+
+    .rating-grid .option:nth-child(3) {
+      --rating-color: #d1a12f;
+      --rating-soft: #fff4d8;
+      --rating-shadow: rgba(209, 161, 47, 0.2);
+    }
+
+    .rating-grid .option:nth-child(4) {
+      --rating-color: #7cb342;
+      --rating-soft: #ebf7dc;
+      --rating-shadow: rgba(124, 179, 66, 0.22);
+    }
+
+    .rating-grid .option:nth-child(5) {
+      --rating-color: #2e9e5b;
+      --rating-soft: #dcf6e6;
+      --rating-shadow: rgba(46, 158, 91, 0.22);
+    }
+
+    .rating-grid .option span {
+      color: var(--rating-color, var(--text));
+    }
+
     .option input {
       position: absolute;
       opacity: 0;
@@ -134,7 +174,7 @@
       padding: 14px;
       border-radius: 18px;
       border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 250, 246, 0.92);
       font-weight: 700;
       transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
       cursor: pointer;
@@ -148,9 +188,10 @@
     }
 
     .option input:checked + span {
-      border-color: rgba(79, 70, 229, 0.45);
-      background: linear-gradient(180deg, #ffffff 0%, #eef2ff 100%);
-      box-shadow: 0 12px 24px rgba(79, 70, 229, 0.14);
+      color: var(--rating-color, var(--text));
+      border-color: color-mix(in srgb, var(--rating-color, var(--primary)) 58%, white);
+      background: linear-gradient(180deg, #fffaf6 0%, var(--rating-soft, #f4e2d9) 100%);
+      box-shadow: 0 12px 24px var(--rating-shadow, rgba(140, 59, 47, 0.18));
       transform: translateY(-2px);
     }
 
@@ -163,14 +204,14 @@
       padding: 16px 18px;
       font: inherit;
       color: var(--text);
-      background: rgba(255, 255, 255, 0.88);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      background: rgba(255, 251, 248, 0.94);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
     }
 
     textarea:focus,
     .option input:focus-visible + span,
     button:focus-visible {
-      outline: 3px solid rgba(79, 70, 229, 0.2);
+      outline: 3px solid rgba(140, 59, 47, 0.22);
       outline-offset: 2px;
     }
 
@@ -181,15 +222,15 @@
       font: inherit;
       font-weight: 800;
       color: white;
-      background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%);
-      box-shadow: 0 18px 34px rgba(79, 70, 229, 0.26);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      box-shadow: 0 18px 34px rgba(107, 62, 46, 0.28);
       cursor: pointer;
       transition: transform 0.18s ease, box-shadow 0.18s ease;
     }
 
     button:hover {
       transform: translateY(-1px);
-      box-shadow: 0 20px 40px rgba(79, 70, 229, 0.3);
+      box-shadow: 0 20px 40px rgba(107, 62, 46, 0.34);
     }
 
     .confirmation {
@@ -210,7 +251,7 @@
       display: grid;
       place-items: center;
       font-size: 2rem;
-      background: linear-gradient(135deg, rgba(79, 70, 229, 0.14), rgba(20, 184, 166, 0.18));
+      background: linear-gradient(135deg, rgba(140, 59, 47, 0.16), rgba(107, 62, 46, 0.22));
     }
 
     .confirmation p {
@@ -230,10 +271,15 @@
     .pill {
       padding: 10px 14px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.86);
+      background: rgba(255, 250, 246, 0.9);
       border: 1px solid var(--border);
       color: var(--text);
       font-weight: 700;
+    }
+
+    .page-footer p {
+      margin: 0;
+      font-size: 0.95rem;
     }
 
     @media (max-width: 640px) {
@@ -316,6 +362,9 @@
         <div class="summary" id="summary"></div>
       </section>
     </section>
+    <footer class="page-footer">
+      <p>Thanks for helping us improve every experience.</p>
+    </footer>
   </main>
 
   <script>

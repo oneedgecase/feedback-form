@@ -4,7 +4,7 @@ const path = require('path');
 
 const port = Number(process.env.PORT) || 4173;
 const distDir = path.join(__dirname, 'dist');
-const baseDir = fs.existsSync(distDir) ? distDir : __dirname;
+const baseDirs = [__dirname, ...(fs.existsSync(distDir) ? [distDir] : [])];
 
 const contentTypes = {
   '.html': 'text/html; charset=utf-8',
@@ -19,31 +19,42 @@ const contentTypes = {
 };
 
 const server = http.createServer((req, res) => {
-  const requestPath = req.url === '/' ? '/index.html' : req.url;
+  const requestPath = req.url === '/' ? '/index.html' : req.url.split('?')[0];
   const safePath = path.normalize(requestPath).replace(/^([.][.][/\\])+/, '');
-  const filePath = path.join(baseDir, safePath);
 
-  fs.readFile(filePath, (error, data) => {
-    if (error) {
-      if (error.code === 'ENOENT') {
-        res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
-        res.end('Not found');
-        return;
-      }
-
-      res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
-      res.end('Server error');
+  const tryRead = (index) => {
+    if (index >= baseDirs.length) {
+      res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end('Not found');
       return;
     }
 
-    const ext = path.extname(filePath).toLowerCase();
-    res.writeHead(200, {
-      'Content-Type': contentTypes[ext] || 'application/octet-stream'
+    const filePath = path.join(baseDirs[index], safePath);
+
+    fs.readFile(filePath, (error, data) => {
+      if (error) {
+        if (error.code === 'ENOENT') {
+          tryRead(index + 1);
+          return;
+        }
+
+        res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+        res.end('Server error');
+        return;
+      }
+
+      const ext = path.extname(filePath).toLowerCase();
+      res.writeHead(200, {
+        'Content-Type': contentTypes[ext] || 'application/octet-stream'
+      });
+      res.end(data);
     });
-    res.end(data);
-  });
+  };
+
+  tryRead(0);
 });
 
 server.listen(port, () => {
   console.log(`Preview server running at http://localhost:${port}`);
+  console.log('Serving source files first so Preview reflects the latest edits.');
 });
