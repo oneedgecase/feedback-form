@@ -4,6 +4,11 @@
   "private": true,
   "scripts": {
     "build": "mkdir -p dist && cp index.html dist/index.html",
-    "start": "python3 -m http.server 4173"
+    "start": "node server.js"
+  },
+  "devDependencies": {
+    "tar-stream": "^3.1.7",
+    "isomorphic-git": "^1.36.0",
+    "jszip": "^3.10.1"
   }
 }
